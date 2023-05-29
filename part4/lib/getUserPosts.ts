@@ -3,7 +3,7 @@ export default async function getUserPosts(userId: String) {
         {next: {revalidate: 60 }});
 
     if (!res.ok) {
-        throw new Error('Failed fetch user posts');
+        return undefined;
     }
     return res.json();
 }
