@@ -2,17 +2,19 @@ import React from 'react';
 import type {Metadata} from "next";
 import getAllUsers from "@/lib/getAllUsers";
 import Link from "next/link";
+import User from "@/app/users/[userId]/page";
 
 export const metadata: Metadata = {
     title: 'Users'
 }
+
 const Users = async () => {
     const usersData: Promise<User[]> = getAllUsers();
     const users = await usersData;
 
     console.log('hello user')
 
-    const content = (
+    return (
         <section>
             <h2>
                 <Link href="/">return home</Link>
@@ -30,7 +32,6 @@ const Users = async () => {
             })}
         </section>
     );
-    return content;
 };
 
 export default Users;

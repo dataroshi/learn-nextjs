@@ -4,6 +4,7 @@ import getUserPosts from "@/lib/getUserPosts";
 import {Suspense} from "react";
 import type {Metadata} from "next";
 import UserPosts from "@/app/users/[userId]/components/UserPosts";
+import getAllUsers from "@/lib/getAllUsers";
 
 type Params = {
     params: {
@@ -20,18 +21,26 @@ export async function generateMetadata({ params : {userId}}:Params): Promise<Met
     }
 }
 
+// should be on the page(s) that uses these id's, not the parent (the one a level up?)
+export async function generateStaticParams() {
+    const usersData: Promise<User[]> = getAllUsers();
+    const users = await usersData;
+    return users.map(user => ({
+            userId: user.id.toString()
+        })
+    )
+}
+
 const User = async ({ params: { userId}}: Params) => {
     const userData: Promise<User> = getUser(userId); // no duplication
     const userPostsData: Promise<Post[]> = getUserPosts(userId);
 
-    // const [user, userPosts] = await Promise.all([userData, userPostsData]);
     const user = await userData;
     return (
         <>
             <h2>{user.name}</h2>
             <br />
             <Suspense fallback={<h2>Loading posts</h2>}/>
-            {/*<UserPosts posts={userPosts} />*/}
             {/* @ts-expect-error Server Component */}
             <UserPosts promise={userPostsData} />
         </>
