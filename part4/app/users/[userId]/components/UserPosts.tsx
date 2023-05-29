@@ -7,7 +7,7 @@ import React from 'react';
 const UserPosts = async ({promise}: Props) => {
     const posts = await promise;
 
-    return posts.map(post => {
+    const content = posts.map(post => {
         return (
             <article key={post.id}>
                 <h2> {post.title} </h2>
@@ -16,6 +16,7 @@ const UserPosts = async ({promise}: Props) => {
             </article>
         )
     });
+    return content;
 };
 
 export default UserPosts;
